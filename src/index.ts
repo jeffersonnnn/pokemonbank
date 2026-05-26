@@ -106,7 +106,7 @@ async function runCycle(
     // Step 3: Check if pot covers floor price
     const solLamports = Math.ceil(listing.price * 1e9);
     const priceCheckRes = await fetch(
-      `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=${solLamports}&slippageBps=100`,
+      `https://api.jup.ag/swap/v1/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=${solLamports}&slippageBps=100`,
     );
 
     if (!priceCheckRes.ok) {
