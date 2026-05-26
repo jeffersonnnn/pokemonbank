@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#06060b">
 <title>POKEMONBANK</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
@@ -22,10 +25,13 @@
   --display:'Bebas Neue',Impact,sans-serif;
   --holo-1:#ff6b6b;--holo-2:#feca57;--holo-3:#48dbfb;--holo-4:#ff9ff3;--holo-5:#54a0ff;--holo-6:#5f27cd;
 }
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
 body{
   background:var(--bg);color:var(--text);
   font-family:var(--sans);line-height:1.6;overflow-x:hidden;
+  padding-top:env(safe-area-inset-top);
+  padding-bottom:env(safe-area-inset-bottom);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
 }
 
 /* HEXAGONAL BACKGROUND */
@@ -417,18 +423,95 @@ footer .foot-links a:hover{color:var(--gold)}
 .coll-preview-card:hover{opacity:1;transform:scale(1.1)}
 .coll-preview-card img{width:100%;height:auto;display:block}
 
-/* RESPONSIVE */
-@media(max-width:640px){
-  .draw-grid{grid-template-columns:1fr}
-  .stats-strip{grid-template-columns:1fr;gap:8px}
-  .hero-title{font-size:3.5rem}
-  nav{padding:0 1rem}
-  .draw-wrap{padding:0 0.6rem}
-  .draw-cell{padding:1rem 1.2rem}
-  .card-showcase{flex-direction:column;text-align:center;gap:1.5rem}
-  .card-frame{width:160px;min-width:160px}
-  .collection-bar{flex-direction:column;text-align:center;gap:0.6rem}
+/* RESPONSIVE - TABLET */
+@media(max-width:768px){
+  .floating-cards{display:none}
+  .hero{padding:2.5rem 1rem 1.5rem}
+  .hero-tagline{font-size:0.76rem;margin:1rem 0 2rem}
+}
+
+/* RESPONSIVE - MOBILE */
+@media(max-width:480px){
+  nav{padding:0 0.8rem;height:50px}
+  .nav-brand{font-size:1.1rem;letter-spacing:0.08em}
+  .nav-links{gap:0.6rem}
+  .nav-links a{font-size:0.55rem;letter-spacing:0.03em}
+  .nav-buy{padding:0.3rem 0.6rem;font-size:0.55rem!important}
+
+  .hero{padding:2rem 0.8rem 1rem}
+  .hero-eyebrow{font-size:0.55rem;letter-spacing:0.2em;margin-bottom:0.6rem}
+  .hero-title{font-size:2.8rem;letter-spacing:0.04em}
+  .hero-tagline{font-size:0.72rem;line-height:1.7;margin:0.8rem 0 1.5rem;padding:0 0.5rem}
+
+  .floating-cards{display:none}
+
+  .draw-wrap{padding:0 0.4rem}
+  .draw-card{border-radius:12px}
+  .draw-card::before{border-radius:12px 12px 0 0}
+  .draw-top{padding:1rem 1.2rem 0}
+  .draw-label{font-size:0.58rem;letter-spacing:0.15em}
+
+  .card-showcase{flex-direction:column;text-align:center;gap:1.2rem;padding:1.5rem 1.2rem}
+  .card-frame{width:150px;min-width:150px}
+  .card-info .card-name{font-size:0.95rem}
+  .card-info .card-winner{font-size:0.65rem}
+
+  .no-draw-msg{padding:2rem 1.2rem}
+  .no-draw-msg .pot-amount{font-size:2.8rem}
+  .no-draw-card{width:110px}
+
+  .draw-grid{grid-template-columns:1fr 1fr}
+  .draw-cell{padding:0.9rem 1rem}
+  .draw-cell-label{font-size:0.5rem;letter-spacing:0.1em}
+  .draw-cell-value{font-size:0.82rem}
+  .draw-cell-sub{font-size:0.5rem}
+
+  .draw-timer-bar{padding:0.9rem 1rem;border-radius:0 0 12px 12px}
+  .draw-timer{font-size:1.5rem}
+
+  .ca-bar{flex-wrap:wrap;gap:0.4rem;padding:0.8rem 0.5rem}
+  .ca-bar code{font-size:0.5rem;padding:0.25rem 0.5rem;max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  .stats-strip{grid-template-columns:repeat(3,1fr);gap:6px;padding:0 0.5rem;margin-top:1.8rem}
+  .stat-box{padding:1rem 0.5rem;border-radius:8px}
+  .stat-box-label{font-size:0.48rem;letter-spacing:0.08em}
+  .stat-box-val{font-size:1.1rem}
+
+  .pokeball-divider{padding:2rem 1rem}
+
+  .content-section{padding:0 1rem 2.5rem}
+  .section-eyebrow{font-size:0.52rem;letter-spacing:0.2em}
+  .section-title{font-size:1.8rem}
+  .section-desc{font-size:0.72rem;line-height:1.7}
+
+  .steps-grid{gap:8px}
   .step-row{grid-template-columns:48px 1fr}
+  .step-index{font-size:1.6rem}
+  .step-content{padding:1.1rem 1rem}
+  .step-content h3{font-size:0.8rem}
+  .step-content p{font-size:0.7rem}
+
+  .collection-bar{flex-direction:column;text-align:center;gap:0.5rem;padding:0.9rem 1rem;margin-top:1.2rem}
+  .coll-preview{justify-content:center}
+  .coll-preview-card{width:34px}
+
+  .draw-table table{font-size:0.62rem}
+  .draw-table th{font-size:0.48rem;padding:0.6rem 0.5rem}
+  .draw-table td{padding:0.5rem 0.5rem}
+
+  footer{padding:2rem 1rem;font-size:0.55rem}
+  footer .foot-links{gap:1rem}
+  footer .foot-links a{font-size:0.55rem}
+}
+
+/* RESPONSIVE - SMALL MOBILE (iPhone SE, etc) */
+@media(max-width:375px){
+  .nav-links a:not(.nav-buy){display:none}
+  .hero-title{font-size:2.4rem}
+  .draw-grid{grid-template-columns:1fr}
+  .stats-strip{grid-template-columns:1fr;gap:6px}
+  .stat-box{padding:0.8rem 0.5rem}
+  .ca-bar code{max-width:180px;font-size:0.48rem}
 }
 </style>
 </head>
@@ -446,10 +529,10 @@ footer .foot-links a:hover{color:var(--gold)}
 
 <section class="hero">
   <div class="floating-cards">
-    <div class="float-card" style="--r:-12deg"><img src="https://images.pokemontcg.io/swsh12pt5/160_hires.png" alt=""></div>
-    <div class="float-card" style="--r:8deg"><img src="https://images.pokemontcg.io/sm10/33_hires.png" alt=""></div>
-    <div class="float-card" style="--r:-6deg"><img src="https://images.pokemontcg.io/swsh12/127_hires.png" alt=""></div>
-    <div class="float-card" style="--r:15deg"><img src="https://images.pokemontcg.io/pgo/68_hires.png" alt=""></div>
+    <div class="float-card" style="--r:-12deg"><img src="https://images.pokemontcg.io/swsh12pt5/160_hires.png" alt="" loading="lazy"></div>
+    <div class="float-card" style="--r:8deg"><img src="https://images.pokemontcg.io/sm10/33_hires.png" alt="" loading="lazy"></div>
+    <div class="float-card" style="--r:-6deg"><img src="https://images.pokemontcg.io/swsh12/127_hires.png" alt="" loading="lazy"></div>
+    <div class="float-card" style="--r:15deg"><img src="https://images.pokemontcg.io/pgo/68_hires.png" alt="" loading="lazy"></div>
   </div>
   <div class="hero-eyebrow"><span class="pokeball-sm"></span> Gotta Collect 'Em All <span class="pokeball-sm"></span></div>
   <h1 class="hero-title">POKEMON<span>BANK</span></h1>
@@ -468,7 +551,7 @@ footer .foot-links a:hover{color:var(--gold)}
         <div class="card-frame">
           <div class="card-inner">
             <img id="card-image" src="" alt="Pokemon Card" style="display:none">
-            <img class="card-placeholder" id="card-placeholder" src="https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg" alt="">
+            <img class="card-placeholder" id="card-placeholder" src="https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg" alt="" loading="lazy">
           </div>
         </div>
         <div class="card-info">
@@ -481,7 +564,7 @@ footer .foot-links a:hover{color:var(--gold)}
 
       <div class="no-draw-msg" id="no-draw-msg">
         <div class="no-draw-card">
-          <img src="https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg" alt="Next card">
+          <img src="https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg" alt="Next card" loading="lazy">
         </div>
         <div class="pot-label">Card Vault</div>
         <div class="pot-amount" id="pot-amount">$0.00</div>
@@ -581,18 +664,18 @@ footer .foot-links a:hover{color:var(--gold)}
 
   <div class="collection-bar" id="collection-bar">
     <div class="collection-badge" id="coll-badge">
-      <img src="https://images.pokemontcg.io/swsh12pt5/160_hires.png" alt="">
+      <img src="https://images.pokemontcg.io/swsh12pt5/160_hires.png" alt="" loading="lazy">
     </div>
     <div class="collection-meta">
       <div class="coll-label">Sourcing cards from</div>
       <div class="coll-name" id="coll-name">Pokemon Punks</div>
       <div class="coll-floor" id="coll-floor">Floor: 0.047 SOL | 70 listed on Magic Eden</div>
       <div class="coll-preview">
-        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/sm115/7_hires.png" alt=""></div>
-        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/swsh12/85_hires.png" alt=""></div>
-        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/pgo/29_hires.png" alt=""></div>
-        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/swsh9/120_hires.png" alt=""></div>
-        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/sm35/1_hires.png" alt=""></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/sm115/7_hires.png" alt="" loading="lazy"></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/swsh12/85_hires.png" alt="" loading="lazy"></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/pgo/29_hires.png" alt="" loading="lazy"></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/swsh9/120_hires.png" alt="" loading="lazy"></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/sm35/1_hires.png" alt="" loading="lazy"></div>
       </div>
     </div>
   </div>
