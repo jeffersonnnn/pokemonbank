@@ -374,6 +374,76 @@ footer .foot-links{display:flex;justify-content:center;gap:1.5rem;margin-bottom:
 footer .foot-links a{color:var(--text-dim);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
 footer .foot-links a:hover{color:var(--gold)}
 
+/* PROOF LINKS */
+.proof-links{display:flex;gap:0.5rem;flex-wrap:wrap;margin-top:0.8rem}
+.proof-link{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  font-size:0.58rem;font-weight:600;padding:0.25rem 0.6rem;
+  border-radius:4px;border:1px solid var(--border);
+  color:var(--text-dim);text-decoration:none;
+  transition:all 0.2s;
+}
+.proof-link:hover{border-color:var(--blue-bright);color:var(--blue-bright)}
+.proof-link.buy-tx{border-color:rgba(45,198,83,0.3);color:var(--green)}
+.proof-link.buy-tx:hover{border-color:var(--green-bright);color:var(--green-bright)}
+.proof-link.nft-link{border-color:rgba(240,192,64,0.3);color:var(--gold)}
+.proof-link.nft-link:hover{border-color:var(--gold-bright);color:var(--gold-bright)}
+.proof-link.transfer-tx{border-color:rgba(77,163,255,0.3);color:var(--blue-bright)}
+.proof-link.transfer-tx:hover{border-color:var(--blue-bright);color:var(--white)}
+
+.proof-badge{
+  display:inline-flex;align-items:center;gap:0.2rem;
+  font-size:0.5rem;font-weight:700;
+  color:var(--green);
+}
+.proof-badge::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--green)}
+
+/* TABLE PROOF CELL */
+.draw-table .proof-cell{white-space:nowrap}
+.draw-table .proof-cell a{
+  font-size:0.55rem;font-weight:600;color:var(--blue-bright);
+  text-decoration:none;margin-right:0.4rem;
+}
+.draw-table .proof-cell a:hover{color:var(--gold);text-decoration:underline}
+
+/* LIVE COLLECTION SECTION */
+.live-collection{
+  max-width:720px;margin:0 auto;padding:0 1.5rem 1rem;
+  position:relative;z-index:1;
+}
+.live-collection-header{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:1rem;
+}
+.live-collection-header h3{font-size:0.9rem;font-weight:700;color:var(--white)}
+.live-collection-header a{font-size:0.62rem;font-weight:600;color:var(--blue-bright)}
+.live-cards-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:10px;
+}
+.live-card{
+  border-radius:8px;overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--surface);
+  transition:transform 0.2s,border-color 0.2s;
+  position:relative;
+}
+.live-card:hover{transform:translateY(-3px);border-color:var(--border-bright)}
+.live-card img{width:100%;height:auto;display:block}
+.live-card-price{
+  padding:0.4rem;text-align:center;
+  font-size:0.58rem;font-weight:700;color:var(--gold);
+  background:var(--surface-solid);border-top:1px solid var(--border);
+}
+
+@media(max-width:480px){
+  .live-cards-grid{grid-template-columns:repeat(3,1fr);gap:8px}
+  .proof-links{gap:0.3rem}
+  .proof-link{font-size:0.5rem;padding:0.2rem 0.4rem}
+}
+@media(max-width:375px){
+  .live-cards-grid{grid-template-columns:repeat(2,1fr)}
+}
+
 /* FLOATING CARDS */
 .floating-cards{
   position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;
@@ -559,6 +629,7 @@ footer .foot-links a:hover{color:var(--gold)}
           <div class="card-winner-label">Caught by</div>
           <div class="card-winner" id="card-winner">--</div>
           <div class="card-price">Pulled for <strong id="card-price">--</strong></div>
+          <div class="proof-links" id="proof-links"></div>
         </div>
       </div>
 
@@ -681,6 +752,15 @@ footer .foot-links a:hover{color:var(--gold)}
   </div>
 </div>
 
+<div class="live-collection" id="live-collection">
+  <div class="live-collection-header">
+    <h3>Available Cards</h3>
+    <a href="https://magiceden.io/marketplace/pokemon_punks" target="_blank">View full collection on Magic Eden &#8599;</a>
+  </div>
+  <div class="live-cards-grid" id="live-cards-grid">
+  </div>
+</div>
+
 <div class="pokeball-divider"><div class="pokeball-icon"></div></div>
 
 <div class="content-section" id="history">
@@ -691,10 +771,10 @@ footer .foot-links a:hover{color:var(--gold)}
   <div class="draw-table">
     <table>
       <thead>
-        <tr><th>Time</th><th>Trainer</th><th>Card</th><th>Price</th></tr>
+        <tr><th>Time</th><th>Trainer</th><th>Card</th><th>Price</th><th>Proof</th></tr>
       </thead>
       <tbody id="draw-history">
-        <tr><td colspan="4" style="text-align:center;color:var(--text-dim);padding:2.5rem;font-size:0.72rem">No cards dropped yet. The vault is filling.</td></tr>
+        <tr><td colspan="5" style="text-align:center;color:var(--text-dim);padding:2.5rem;font-size:0.72rem">No cards dropped yet. The vault is filling.</td></tr>
       </tbody>
     </table>
   </div>
@@ -767,6 +847,18 @@ function renderLatestDraw(state) {
     document.getElementById('card-winner').textContent = d.winner;
     document.getElementById('card-price').textContent = d.solPrice.toFixed(4) + ' SOL';
 
+    var proofHtml = '';
+    if (d.buySignature) {
+      proofHtml += '<a class="proof-link buy-tx" href="https://solscan.io/tx/' + d.buySignature + '" target="_blank">Buy TX</a>';
+    }
+    if (d.transferSignature) {
+      proofHtml += '<a class="proof-link transfer-tx" href="https://solscan.io/tx/' + d.transferSignature + '" target="_blank">Transfer TX</a>';
+    }
+    if (d.nftMint) {
+      proofHtml += '<a class="proof-link nft-link" href="https://magiceden.io/item-details/' + d.nftMint + '" target="_blank">View NFT</a>';
+    }
+    document.getElementById('proof-links').innerHTML = proofHtml;
+
     const img = document.getElementById('card-image');
     const placeholder = document.getElementById('card-placeholder');
     if (d.nftImage) {
@@ -829,17 +921,54 @@ function renderHistory(state) {
     const time = new Date(d.timestamp).toLocaleString();
     const winner = d.winner.slice(0,6) + '...' + d.winner.slice(-4);
     const price = d.solPrice.toFixed(4) + ' SOL';
+    var proof = '';
+    if (d.buySignature) proof += '<a href="https://solscan.io/tx/' + d.buySignature + '" target="_blank">Buy</a>';
+    if (d.transferSignature) proof += '<a href="https://solscan.io/tx/' + d.transferSignature + '" target="_blank">Transfer</a>';
+    if (d.nftMint) proof += '<a href="https://magiceden.io/item-details/' + d.nftMint + '" target="_blank">NFT</a>';
     return '<tr>' +
       '<td>' + time + '</td>' +
-      '<td class="winner-cell">' + winner + '</td>' +
+      '<td class="winner-cell"><a href="https://solscan.io/account/' + d.winner + '" target="_blank" style="color:inherit">' + winner + '</a></td>' +
       '<td class="card-cell">' + d.nftName + '</td>' +
       '<td class="price-cell">' + price + '</td>' +
+      '<td class="proof-cell">' + (proof || '-') + '</td>' +
       '</tr>';
   }).join('');
 }
 
 fetchState();
 setInterval(fetchState, 30000);
+
+async function fetchLiveCollection() {
+  try {
+    const res = await fetch('https://api-mainnet.magiceden.dev/v2/collections/pokemon_punks/listings?offset=0&limit=5');
+    if (!res.ok) return;
+    const listings = await res.json();
+    const grid = document.getElementById('live-cards-grid');
+    if (listings.length === 0) { grid.innerHTML = '<div style="color:var(--text-dim);font-size:0.72rem;grid-column:1/-1;text-align:center;padding:1rem">No listings available</div>'; return; }
+
+    const mints = listings.map(l => l.tokenMint);
+    const metaPromises = mints.map(mint =>
+      fetch('https://api-mainnet.magiceden.dev/v2/tokens/' + mint).then(r => r.ok ? r.json() : null).catch(() => null)
+    );
+    const metas = await Promise.all(metaPromises);
+
+    grid.innerHTML = listings.map((l, i) => {
+      const meta = metas[i];
+      const name = (meta && meta.name) || 'Poke #' + l.tokenMint.slice(0,4);
+      const image = (meta && meta.image) || '';
+      const imgTag = image ? '<img src="' + image + '" alt="' + name + '" loading="lazy">' : '<div style="height:120px;display:flex;align-items:center;justify-content:center;color:var(--text-dim)">?</div>';
+      return '<a class="live-card" href="https://magiceden.io/item-details/' + l.tokenMint + '" target="_blank">' +
+        imgTag +
+        '<div class="live-card-price">' + l.price + ' SOL</div>' +
+      '</a>';
+    }).join('');
+  } catch (err) {
+    console.error('Collection fetch failed:', err);
+  }
+}
+
+fetchLiveCollection();
+setInterval(fetchLiveCollection, 120000);
 </script>
 </body>
 </html>
