@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POKEMONBANK</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a1628;--bg-deep:#060e1c;
+  --surface:rgba(12,30,60,0.85);--surface-solid:#0c1e3c;
+  --surface2:rgba(16,40,78,0.7);--surface3:rgba(20,50,95,0.5);
+  --border:rgba(60,120,200,0.15);--border-bright:rgba(80,150,255,0.25);
+  --blue:#2d7dd2;--blue-bright:#4da3ff;--blue-deep:#1a5fa0;--blue-glow:rgba(45,125,210,0.2);
+  --red:#e63946;--red-bright:#ff4d5a;--red-deep:#c1121f;
+  --gold:#f0c040;--gold-bright:#ffe066;--gold-deep:#c89b20;
+  --green:#2dc653;--green-bright:#4de070;
+  --white:#f0f4ff;--text:#a0b4d0;--text-dim:#5a7090;--text-bright:#d0ddf0;
+  --sans:'Inter',system-ui,-apple-system,sans-serif;
+  --display:'Bebas Neue',Impact,sans-serif;
+  --holo-1:#ff6b6b;--holo-2:#feca57;--holo-3:#48dbfb;--holo-4:#ff9ff3;--holo-5:#54a0ff;--holo-6:#5f27cd;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);color:var(--text);
+  font-family:var(--sans);line-height:1.6;overflow-x:hidden;
+}
+
+/* HEXAGONAL BACKGROUND */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='49' viewBox='0 0 28 49'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%231a3a6a' fill-opacity='0.12'%3E%3Cpath d='M13.99 9.25l13 7.5v15l-13 7.5L1 31.75v-15l12.99-7.5zM3 17.9v12.7l10.99 6.34 11-6.35V17.9l-11-6.34L3 17.9zM0 15l12.98-7.5V0h-2v6.35L0 12.69v2.3zm0 18.5L12.98 41v8h-2v-6.85L0 35.81v-2.3zM15 0v7.5L27.99 15H28v-2.31h-.01L17 6.35V0h-2zm0 49v-8l12.99-7.5H28v2.31h-.01L17 42.15V49h-2z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  opacity:0.6;
+}
+body::after{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse at 50% 0%,rgba(45,125,210,0.12) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 100%,rgba(230,57,70,0.05) 0%,transparent 40%),
+    radial-gradient(ellipse at 80% 80%,rgba(45,125,210,0.06) 0%,transparent 35%);
+}
+
+a{color:var(--blue-bright);text-decoration:none;transition:color 0.2s}
+a:hover{color:var(--gold)}
+
+/* NAV */
+nav{
+  position:sticky;top:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 clamp(1rem,4vw,3rem);height:56px;
+  background:rgba(6,14,28,0.92);backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{
+  font-family:var(--display);font-size:1.5rem;letter-spacing:0.12em;
+  color:var(--gold);
+  text-shadow:0 0 20px rgba(240,192,64,0.3);
+}
+.nav-links{display:flex;gap:1.5rem;align-items:center}
+.nav-links a{font-size:0.7rem;font-weight:600;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;transition:all 0.2s}
+.nav-links a:hover{color:var(--white)}
+.nav-buy{
+  background:linear-gradient(135deg,var(--red),var(--red-deep));
+  color:white!important;padding:0.4rem 1.1rem;border-radius:6px;
+  font-weight:700;font-size:0.65rem!important;letter-spacing:0.04em;
+  box-shadow:0 2px 12px rgba(230,57,70,0.3);transition:transform 0.15s,box-shadow 0.15s!important;
+}
+.nav-buy:hover{transform:translateY(-1px);box-shadow:0 4px 20px rgba(230,57,70,0.4);color:white!important}
+
+/* HERO */
+.hero{
+  position:relative;z-index:1;
+  padding:3.5rem clamp(1rem,4vw,3rem) 2rem;
+  display:flex;flex-direction:column;align-items:center;
+}
+.hero-eyebrow{
+  display:inline-flex;align-items:center;gap:0.5rem;
+  font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3em;
+  color:var(--blue-bright);margin-bottom:1rem;
+}
+.hero-eyebrow .pokeball-sm{
+  width:14px;height:14px;border-radius:50%;position:relative;
+  background:linear-gradient(180deg,var(--red) 0%,var(--red) 45%,#1a2a4a 45%,#1a2a4a 55%,var(--white) 55%,var(--white) 100%);
+  border:1.5px solid rgba(255,255,255,0.3);flex-shrink:0;
+}
+.hero-eyebrow .pokeball-sm::after{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:4px;height:4px;border-radius:50%;background:var(--bg);border:1.5px solid rgba(255,255,255,0.3);
+}
+.hero-title{
+  font-family:var(--display);font-size:clamp(3.5rem,12vw,7rem);
+  letter-spacing:0.08em;line-height:0.9;text-align:center;
+  color:var(--white);
+  text-shadow:0 0 40px rgba(45,125,210,0.25),0 2px 0 rgba(0,0,0,0.3);
+}
+.hero-title span{color:var(--gold);text-shadow:0 0 30px rgba(240,192,64,0.25),0 2px 0 rgba(0,0,0,0.3)}
+.hero-tagline{
+  font-size:0.82rem;color:var(--text);text-align:center;
+  margin:1.2rem 0 2.5rem;max-width:540px;line-height:1.8;font-weight:400;
+}
+.hero-tagline strong{color:var(--white);font-weight:600}
+
+/* MAIN CARD */
+.draw-wrap{width:100%;max-width:720px;padding:0 1rem}
+
+.draw-card{
+  position:relative;
+  background:var(--surface);
+  border:1px solid var(--border-bright);
+  border-radius:16px;
+  overflow:hidden;
+  backdrop-filter:blur(12px);
+  box-shadow:0 4px 40px rgba(0,0,0,0.3),0 0 80px var(--blue-glow);
+}
+.draw-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:3px;
+  background:linear-gradient(90deg,var(--red),var(--gold),var(--blue-bright),var(--gold),var(--red));
+  border-radius:16px 16px 0 0;
+}
+.draw-card::after{
+  content:'';position:absolute;inset:0;pointer-events:none;border-radius:16px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(45,125,210,0.06) 0%,transparent 50%);
+}
+
+.draw-top{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:1.2rem 1.8rem 0;position:relative;z-index:1;
+}
+.draw-label{font-size:0.65rem;font-weight:700;text-transform:uppercase;letter-spacing:0.2em;color:var(--blue-bright)}
+.draw-status{
+  font-size:0.6rem;padding:0.25rem 0.8rem;font-weight:700;letter-spacing:0.04em;
+  text-transform:uppercase;border-radius:4px;
+}
+.draw-status.live{background:var(--red);color:white;box-shadow:0 0 12px rgba(230,57,70,0.4);animation:pulse 2s infinite}
+.draw-status.waiting{background:var(--surface2);color:var(--text-dim);border:1px solid var(--border)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.75}}
+
+/* CARD SHOWCASE */
+.card-showcase{
+  display:flex;align-items:center;gap:2rem;
+  padding:2rem 1.8rem;position:relative;z-index:1;
+}
+
+.card-frame{
+  position:relative;width:175px;min-width:175px;
+  padding:4px;border-radius:12px;
+  background:linear-gradient(135deg,var(--holo-1),var(--holo-2),var(--holo-3),var(--holo-4),var(--holo-5),var(--holo-6),var(--holo-1));
+  background-size:300% 300%;
+  animation:holoShift 6s ease infinite;
+  box-shadow:0 8px 30px rgba(0,0,0,0.4),0 0 20px rgba(45,125,210,0.15);
+  transition:transform 0.4s ease,box-shadow 0.4s ease;
+}
+.card-frame:hover{
+  transform:scale(1.04) rotateY(3deg) rotateX(-2deg);
+  box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 30px rgba(45,125,210,0.25);
+}
+@keyframes holoShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.card-inner{
+  width:100%;aspect-ratio:2.5/3.5;border-radius:9px;
+  background:var(--surface-solid);overflow:hidden;position:relative;
+  display:flex;align-items:center;justify-content:center;
+}
+.card-inner img{width:100%;height:100%;object-fit:cover;display:block}
+.card-inner .card-placeholder{width:100%;height:100%;object-fit:cover;opacity:0.6;filter:brightness(0.7)}
+.card-inner::after{
+  content:'';position:absolute;inset:0;border-radius:9px;
+  background:linear-gradient(145deg,rgba(255,255,255,0.08) 0%,transparent 35%,transparent 65%,rgba(255,255,255,0.03) 100%);
+  pointer-events:none;
+}
+
+.card-info{flex:1;min-width:0}
+.card-info .card-name{
+  font-size:1.1rem;font-weight:800;color:var(--gold);margin-bottom:0.5rem;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.card-info .card-winner-label{
+  font-size:0.58rem;font-weight:700;text-transform:uppercase;letter-spacing:0.15em;
+  color:var(--green-bright);margin-bottom:0.15rem;
+}
+.card-info .card-winner{
+  font-size:0.75rem;color:var(--text-bright);word-break:break-all;margin-bottom:1rem;line-height:1.5;
+  font-family:'JetBrains Mono',monospace;font-weight:400;
+}
+.card-info .card-price{font-size:0.72rem;color:var(--text-dim)}
+.card-info .card-price strong{color:var(--white)}
+
+.no-draw-msg{
+  text-align:center;padding:3rem 1.8rem;position:relative;z-index:1;
+}
+.no-draw-msg .pot-amount{
+  font-family:var(--display);font-size:clamp(3rem,10vw,5rem);
+  line-height:1;margin:0.6rem 0;color:var(--gold);
+  text-shadow:0 0 25px rgba(240,192,64,0.2);
+}
+.no-draw-msg .pot-label{
+  font-size:0.65rem;color:var(--text-dim);letter-spacing:0.12em;
+  text-transform:uppercase;font-weight:600;
+}
+
+/* GRID */
+.draw-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:1px;
+  background:var(--border);position:relative;z-index:1;
+}
+.draw-cell{background:var(--surface-solid);padding:1.2rem 1.8rem}
+.draw-cell-label{
+  font-size:0.58rem;text-transform:uppercase;letter-spacing:0.15em;
+  margin-bottom:0.35rem;font-weight:700;
+}
+.draw-cell-label.gold{color:var(--gold)}
+.draw-cell-label.blue{color:var(--blue-bright)}
+.draw-cell-label.green{color:var(--green-bright)}
+.draw-cell-label.dim{color:var(--text-dim)}
+.draw-cell-value{font-size:0.95rem;color:var(--white);font-weight:800}
+.draw-cell-sub{font-size:0.58rem;color:var(--text-dim);margin-top:0.2rem;font-weight:400}
+
+/* TIMER */
+.draw-timer-bar{
+  display:flex;align-items:center;justify-content:center;gap:0.8rem;
+  padding:1.1rem 1.8rem;
+  background:var(--bg-deep);
+  border-top:1px solid var(--border);
+  border-radius:0 0 16px 16px;
+  position:relative;z-index:1;
+}
+.draw-timer-label{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.2em;color:var(--text-dim);font-weight:600}
+.draw-timer{font-family:var(--display);font-size:2rem;color:var(--white);letter-spacing:0.08em}
+.timer-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green-bright);
+  box-shadow:0 0 8px var(--green-bright),0 0 20px rgba(45,198,83,0.25);
+  animation:blink 1s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+
+/* CA BAR */
+.ca-bar{
+  display:flex;align-items:center;justify-content:center;gap:0.6rem;
+  padding:1rem;margin-top:2rem;font-size:0.65rem;color:var(--text-dim);
+}
+.ca-bar code{
+  color:var(--text-bright);background:var(--surface);padding:0.3rem 0.8rem;
+  border:1px solid var(--border);border-radius:6px;font-size:0.62rem;
+  font-family:'JetBrains Mono',monospace;
+}
+.ca-bar button{
+  background:var(--surface);border:1px solid var(--border);color:var(--text-dim);
+  padding:0.3rem 0.8rem;cursor:pointer;font-family:var(--sans);font-size:0.62rem;
+  font-weight:600;border-radius:6px;transition:all 0.2s;
+}
+.ca-bar button:hover{border-color:var(--blue-bright);color:var(--blue-bright)}
+
+/* STATS */
+.stats-strip{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  max-width:720px;margin:2.5rem auto 0;padding:0 1rem;gap:12px;
+}
+.stat-box{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;padding:1.3rem 1rem;text-align:center;
+  backdrop-filter:blur(8px);
+}
+.stat-box-label{font-size:0.58rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim);margin-bottom:0.4rem;font-weight:600}
+.stat-box-val{font-size:1.4rem;font-weight:900;color:var(--white)}
+.stat-box-val.gold{color:var(--gold)}
+
+/* DIVIDER */
+.pokeball-divider{
+  display:flex;align-items:center;justify-content:center;gap:1rem;
+  padding:2.5rem 2rem;max-width:720px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.pokeball-divider::before,.pokeball-divider::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(90deg,transparent,var(--border-bright),transparent);
+}
+.pokeball-icon{
+  width:24px;height:24px;border-radius:50%;position:relative;
+  background:linear-gradient(180deg,var(--red) 0%,var(--red) 44%,var(--bg) 44%,var(--bg) 56%,var(--white) 56%,var(--white) 100%);
+  border:2px solid rgba(255,255,255,0.2);
+  box-shadow:0 0 12px rgba(230,57,70,0.2);
+}
+.pokeball-icon::after{
+  content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  width:8px;height:8px;border-radius:50%;background:var(--bg);
+  border:2px solid rgba(255,255,255,0.25);
+}
+
+/* SECTIONS */
+.content-section{max-width:720px;margin:0 auto;padding:0 1.5rem 3rem;position:relative;z-index:1}
+.section-eyebrow{
+  font-size:0.6rem;font-weight:700;text-transform:uppercase;letter-spacing:0.3em;
+  color:var(--blue-bright);margin-bottom:0.4rem;
+}
+.section-title{
+  font-family:var(--display);font-size:2.4rem;color:var(--white);
+  letter-spacing:0.06em;margin-bottom:0.5rem;
+  text-shadow:0 0 20px rgba(45,125,210,0.15);
+}
+.section-desc{font-size:0.8rem;color:var(--text-dim);margin-bottom:2.5rem;max-width:500px;line-height:1.8}
+
+/* STEPS */
+.steps-grid{display:grid;gap:10px}
+.step-row{
+  display:grid;grid-template-columns:64px 1fr;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;overflow:hidden;
+  transition:border-color 0.2s;
+}
+.step-row:hover{border-color:var(--border-bright)}
+.step-index{
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(45,125,210,0.08);border-right:1px solid var(--border);
+  font-family:var(--display);font-size:2rem;color:var(--blue-bright);
+}
+.step-content{padding:1.4rem 1.5rem}
+.step-content h3{font-size:0.88rem;font-weight:700;color:var(--white);margin-bottom:0.3rem}
+.step-content p{font-size:0.76rem;color:var(--text);line-height:1.75}
+.step-content strong{color:var(--gold)}
+
+/* COLLECTION BAR */
+.collection-bar{
+  display:flex;align-items:center;gap:1rem;
+  padding:1rem 1.4rem;margin-top:1.5rem;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:12px;
+}
+.collection-badge{
+  width:44px;height:44px;border-radius:8px;overflow:hidden;
+  background:var(--surface-solid);display:flex;align-items:center;justify-content:center;
+  font-size:1.1rem;flex-shrink:0;border:1px solid var(--border);
+}
+.collection-badge img{width:100%;height:100%;object-fit:cover}
+.collection-meta{flex:1;min-width:0}
+.collection-meta .coll-label{font-size:0.55rem;text-transform:uppercase;letter-spacing:0.12em;color:var(--text-dim);font-weight:600}
+.collection-meta .coll-name{font-size:0.82rem;font-weight:700;color:var(--white)}
+.collection-meta .coll-floor{font-size:0.65rem;color:var(--blue-bright);font-weight:500}
+
+/* TABLE */
+.draw-table{overflow-x:auto}
+.draw-table table{width:100%;border-collapse:separate;border-spacing:0;font-size:0.72rem}
+.draw-table th{
+  font-size:0.55rem;letter-spacing:0.12em;text-transform:uppercase;font-weight:700;
+  color:var(--text-dim);text-align:left;padding:0.8rem 0.8rem;
+  border-bottom:1px solid var(--border);
+}
+.draw-table td{
+  padding:0.65rem 0.8rem;border-bottom:1px solid var(--border);
+  color:var(--text);
+}
+.draw-table tbody tr{transition:background 0.15s}
+.draw-table tbody tr:hover td{background:var(--surface2)}
+.draw-table .winner-cell{color:var(--green-bright);font-weight:600}
+.draw-table .card-cell{color:var(--gold);font-weight:700}
+.draw-table .price-cell{color:var(--white);font-weight:500}
+
+/* FOOTER */
+footer{
+  border-top:1px solid var(--border);padding:2.5rem 1.5rem;
+  text-align:center;font-size:0.62rem;color:var(--text-dim);
+  max-width:720px;margin:2rem auto 0;position:relative;z-index:1;
+}
+footer .foot-links{display:flex;justify-content:center;gap:1.5rem;margin-bottom:1rem}
+footer .foot-links a{color:var(--text-dim);font-size:0.62rem;text-transform:uppercase;letter-spacing:0.08em;font-weight:600}
+footer .foot-links a:hover{color:var(--gold)}
+
+/* FLOATING CARDS */
+.floating-cards{
+  position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0;
+}
+.float-card{
+  position:absolute;width:90px;border-radius:6px;overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,0.4);
+  opacity:0.12;filter:blur(0.5px);
+  animation:floatCard 20s ease-in-out infinite;
+}
+.float-card img{width:100%;height:auto;display:block}
+.float-card:nth-child(1){top:8%;left:3%;transform:rotate(-12deg);animation-delay:0s}
+.float-card:nth-child(2){top:15%;right:2%;transform:rotate(8deg);animation-delay:-5s}
+.float-card:nth-child(3){top:55%;left:1%;transform:rotate(-6deg);animation-delay:-10s;opacity:0.08}
+.float-card:nth-child(4){top:60%;right:3%;transform:rotate(15deg);animation-delay:-15s;opacity:0.08}
+@keyframes floatCard{
+  0%,100%{transform:translateY(0) rotate(var(--r,0deg))}
+  50%{transform:translateY(-12px) rotate(var(--r,0deg))}
+}
+
+/* NO-DRAW FEATURED CARD */
+.no-draw-card{
+  width:130px;margin:0 auto 1rem;border-radius:8px;overflow:hidden;
+  box-shadow:0 8px 30px rgba(0,0,0,0.4),0 0 20px var(--blue-glow);
+  animation:cardBreathe 3s ease-in-out infinite;
+  position:relative;
+}
+.no-draw-card img{width:100%;height:auto;display:block}
+.no-draw-card::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(145deg,rgba(255,255,255,0.1) 0%,transparent 40%,transparent 60%,rgba(255,255,255,0.04) 100%);
+}
+@keyframes cardBreathe{
+  0%,100%{transform:scale(1);box-shadow:0 8px 30px rgba(0,0,0,0.4),0 0 20px var(--blue-glow)}
+  50%{transform:scale(1.02);box-shadow:0 12px 40px rgba(0,0,0,0.5),0 0 30px rgba(45,125,210,0.3)}
+}
+
+/* COLLECTION CARD PREVIEW */
+.coll-preview{
+  display:flex;gap:6px;margin-top:0.6rem;
+}
+.coll-preview-card{
+  width:40px;border-radius:3px;overflow:hidden;
+  opacity:0.75;transition:opacity 0.2s,transform 0.2s;
+  box-shadow:0 2px 8px rgba(0,0,0,0.3);
+}
+.coll-preview-card:hover{opacity:1;transform:scale(1.1)}
+.coll-preview-card img{width:100%;height:auto;display:block}
+
+/* RESPONSIVE */
+@media(max-width:640px){
+  .draw-grid{grid-template-columns:1fr}
+  .stats-strip{grid-template-columns:1fr;gap:8px}
+  .hero-title{font-size:3.5rem}
+  nav{padding:0 1rem}
+  .draw-wrap{padding:0 0.6rem}
+  .draw-cell{padding:1rem 1.2rem}
+  .card-showcase{flex-direction:column;text-align:center;gap:1.5rem}
+  .card-frame{width:160px;min-width:160px}
+  .collection-bar{flex-direction:column;text-align:center;gap:0.6rem}
+  .step-row{grid-template-columns:48px 1fr}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-brand">POKEMONBANK</div>
+  <div class="nav-links">
+    <a href="#rules">How it Works</a>
+    <a href="#history">Catch Log</a>
+    <a href="https://x.com/GetBountyCoin" target="_blank">Twitter</a>
+    <a class="nav-buy" href="https://pump.fun/coin/7aDzkShoJ3RM8QFNPBNRmNwFpXNmtP1vxLK62oeypump" target="_blank">Buy $POKEMONBANK</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="floating-cards">
+    <div class="float-card" style="--r:-12deg"><img src="https://images.pokemontcg.io/swsh12pt5/160_hires.png" alt=""></div>
+    <div class="float-card" style="--r:8deg"><img src="https://images.pokemontcg.io/sm10/33_hires.png" alt=""></div>
+    <div class="float-card" style="--r:-6deg"><img src="https://images.pokemontcg.io/swsh12/127_hires.png" alt=""></div>
+    <div class="float-card" style="--r:15deg"><img src="https://images.pokemontcg.io/pgo/68_hires.png" alt=""></div>
+  </div>
+  <div class="hero-eyebrow"><span class="pokeball-sm"></span> Gotta Collect 'Em All <span class="pokeball-sm"></span></div>
+  <h1 class="hero-title">POKEMON<span>BANK</span></h1>
+  <p class="hero-tagline">
+    Every trade on <strong>$POKEMONBANK</strong> fills the card vault with USDC. Every holder is a trainer. Every 10 minutes, the bot pulls a <strong>Pokemon card</strong> off the marketplace and drops it straight into a <strong>random holder's wallet</strong>. Hold the token. Collect the cards.
+  </p>
+
+  <div class="draw-wrap">
+    <div class="draw-card">
+      <div class="draw-top">
+        <span class="draw-label">Latest Drop</span>
+        <span class="draw-status waiting" id="draw-status">FILLING</span>
+      </div>
+
+      <div class="card-showcase" id="card-showcase" style="display:none">
+        <div class="card-frame">
+          <div class="card-inner">
+            <img id="card-image" src="" alt="Pokemon Card" style="display:none">
+            <img class="card-placeholder" id="card-placeholder" src="https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg" alt="">
+          </div>
+        </div>
+        <div class="card-info">
+          <div class="card-name" id="card-name">--</div>
+          <div class="card-winner-label">Caught by</div>
+          <div class="card-winner" id="card-winner">--</div>
+          <div class="card-price">Pulled for <strong id="card-price">--</strong></div>
+        </div>
+      </div>
+
+      <div class="no-draw-msg" id="no-draw-msg">
+        <div class="no-draw-card">
+          <img src="https://tcg.pokemon.com/assets/img/global/tcg-card-back-2x.jpg" alt="Next card">
+        </div>
+        <div class="pot-label">Card Vault</div>
+        <div class="pot-amount" id="pot-amount">$0.00</div>
+        <div class="pot-label">USDC filling up for the next pull</div>
+      </div>
+
+      <div class="draw-grid">
+        <div class="draw-cell">
+          <div class="draw-cell-label gold">Card Vault</div>
+          <div class="draw-cell-value" id="grid-pot">$0.00</div>
+          <div class="draw-cell-sub">Filling from trade fees</div>
+        </div>
+        <div class="draw-cell">
+          <div class="draw-cell-label blue">Next Card</div>
+          <div class="draw-cell-value" id="grid-floor">-- SOL</div>
+          <div class="draw-cell-sub">Current floor price</div>
+        </div>
+        <div class="draw-cell">
+          <div class="draw-cell-label green">Trainers</div>
+          <div class="draw-cell-value" id="grid-holders">0</div>
+          <div class="draw-cell-sub">$POKEMONBANK holders</div>
+        </div>
+        <div class="draw-cell">
+          <div class="draw-cell-label dim">Cards Caught</div>
+          <div class="draw-cell-value" id="grid-draws">0</div>
+          <div class="draw-cell-sub">Total drops</div>
+        </div>
+      </div>
+
+      <div class="draw-timer-bar">
+        <span class="timer-dot"></span>
+        <span class="draw-timer-label">Next Drop</span>
+        <span class="draw-timer" id="countdown">--:--</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="ca-bar">
+    <span>CA</span>
+    <code id="ca-display">7aDzkShoJ3RM8QFNPBNRmNwFpXNmtP1vxLK62oeypump</code>
+    <button id="ca-btn" onclick="copyCA()">Copy</button>
+  </div>
+
+  <div class="stats-strip">
+    <div class="stat-box">
+      <div class="stat-box-label">Cards Dropped</div>
+      <div class="stat-box-val gold" id="stat-draws">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-box-label">SOL Spent on Cards</div>
+      <div class="stat-box-val" id="stat-spent">0</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-box-label">Active Trainers</div>
+      <div class="stat-box-val" id="stat-holders">0</div>
+    </div>
+  </div>
+</section>
+
+<div class="pokeball-divider"><div class="pokeball-icon"></div></div>
+
+<div class="content-section" id="rules">
+  <div class="section-eyebrow">How to Play</div>
+  <h2 class="section-title">HOW IT WORKS</h2>
+  <p class="section-desc">$POKEMONBANK is USDC-paired on pump.fun. Trade fees fill the card vault. Holders are trainers. Trainers catch cards.</p>
+
+  <div class="steps-grid">
+    <div class="step-row">
+      <div class="step-index">1</div>
+      <div class="step-content">
+        <h3>The vault fills</h3>
+        <p>Every buy and sell on $POKEMONBANK generates USDC fees that flow into the <strong>card vault</strong> automatically.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-index">2</div>
+      <div class="step-content">
+        <h3>Trainers are entered</h3>
+        <p>If you hold <strong>$POKEMONBANK</strong>, you're in. Every holder is entered into every draw. No signup, no staking.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-index">3</div>
+      <div class="step-content">
+        <h3>A card is pulled</h3>
+        <p>When the vault covers the floor price, the bot pulls a <strong>Pokemon card NFT</strong> from the marketplace using the accumulated USDC.</p>
+      </div>
+    </div>
+    <div class="step-row">
+      <div class="step-index">4</div>
+      <div class="step-content">
+        <h3>A trainer catches it</h3>
+        <p>One random holder is selected. The card <strong>lands directly in their wallet</strong>. On-chain, verifiable, yours forever.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="collection-bar" id="collection-bar">
+    <div class="collection-badge" id="coll-badge">
+      <img src="https://images.pokemontcg.io/swsh12pt5/160_hires.png" alt="">
+    </div>
+    <div class="collection-meta">
+      <div class="coll-label">Sourcing cards from</div>
+      <div class="coll-name" id="coll-name">Pokemon Punks</div>
+      <div class="coll-floor" id="coll-floor">Floor: 0.047 SOL | 70 listed on Magic Eden</div>
+      <div class="coll-preview">
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/sm115/7_hires.png" alt=""></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/swsh12/85_hires.png" alt=""></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/pgo/29_hires.png" alt=""></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/swsh9/120_hires.png" alt=""></div>
+        <div class="coll-preview-card"><img src="https://images.pokemontcg.io/sm35/1_hires.png" alt=""></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="pokeball-divider"><div class="pokeball-icon"></div></div>
+
+<div class="content-section" id="history">
+  <div class="section-eyebrow">Card Log</div>
+  <h2 class="section-title">CATCH LOG</h2>
+  <p class="section-desc">Every card dropped. Every trainer logged. All on-chain.</p>
+
+  <div class="draw-table">
+    <table>
+      <thead>
+        <tr><th>Time</th><th>Trainer</th><th>Card</th><th>Price</th></tr>
+      </thead>
+      <tbody id="draw-history">
+        <tr><td colspan="4" style="text-align:center;color:var(--text-dim);padding:2.5rem;font-size:0.72rem">No cards dropped yet. The vault is filling.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<footer>
+  <div class="foot-links">
+    <a href="https://pump.fun/coin/7aDzkShoJ3RM8QFNPBNRmNwFpXNmtP1vxLK62oeypump" target="_blank">Pump.fun</a>
+    <a href="https://dexscreener.com/solana/7aDzkShoJ3RM8QFNPBNRmNwFpXNmtP1vxLK62oeypump" target="_blank">DexScreener</a>
+    <a href="https://x.com/GetBountyCoin" target="_blank">Twitter</a>
+  </div>
+  <div>$POKEMONBANK on Solana. PokemonBank never sleeps. This page is read-only and never asks for keys, seeds, or approvals. Not financial advice.</div>
+</footer>
+
+<script>
+const CONFIG = {
+  TOKEN_MINT: '7aDzkShoJ3RM8QFNPBNRmNwFpXNmtP1vxLK62oeypump',
+  CYCLE_MINUTES: 10,
+  STATE_URL: '/api/state',
+};
+
+let cycleStart = Date.now();
+setInterval(() => {
+  const cycleMs = CONFIG.CYCLE_MINUTES * 60 * 1000;
+  const remaining = cycleMs - ((Date.now() - cycleStart) % cycleMs);
+  const m = Math.floor(remaining / 60000);
+  const s = Math.floor((remaining % 60000) / 1000);
+  document.getElementById('countdown').textContent =
+    String(m).padStart(2,'0') + ':' + String(s).padStart(2,'0');
+  if (remaining < 1000) { cycleStart = Date.now(); fetchState(); }
+}, 1000);
+
+function copyCA() {
+  navigator.clipboard.writeText(CONFIG.TOKEN_MINT).then(() => {
+    const btn = document.getElementById('ca-btn');
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+async function fetchState() {
+  try {
+    const res = await fetch(CONFIG.STATE_URL);
+    const state = await res.json();
+    renderLatestDraw(state);
+    renderGrid(state);
+    renderStats(state);
+    renderHistory(state);
+    renderCollection(state);
+  } catch (err) {
+    console.error('State fetch failed:', err);
+  }
+}
+
+function renderLatestDraw(state) {
+  const draws = state.draws || [];
+  const showcase = document.getElementById('card-showcase');
+  const noDrawMsg = document.getElementById('no-draw-msg');
+  const status = document.getElementById('draw-status');
+
+  if (draws.length > 0) {
+    const d = draws[0];
+    showcase.style.display = 'flex';
+    noDrawMsg.style.display = 'none';
+    status.textContent = 'CAUGHT';
+    status.className = 'draw-status live';
+
+    document.getElementById('card-name').textContent = d.nftName;
+    document.getElementById('card-winner').textContent = d.winner;
+    document.getElementById('card-price').textContent = d.solPrice.toFixed(4) + ' SOL';
+
+    const img = document.getElementById('card-image');
+    const placeholder = document.getElementById('card-placeholder');
+    if (d.nftImage) {
+      img.src = d.nftImage;
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+    } else {
+      img.style.display = 'none';
+      placeholder.style.display = 'block';
+    }
+  } else {
+    showcase.style.display = 'none';
+    noDrawMsg.style.display = 'block';
+    status.textContent = 'FILLING';
+    status.className = 'draw-status waiting';
+    document.getElementById('pot-amount').textContent =
+      '$' + (state.currentPotUsdc || 0).toFixed(2);
+  }
+}
+
+function renderGrid(state) {
+  document.getElementById('grid-pot').textContent =
+    '$' + (state.currentPotUsdc || 0).toFixed(2);
+  document.getElementById('grid-floor').textContent =
+    state.floorPriceSol ? state.floorPriceSol.toFixed(4) + ' SOL' : '-- SOL';
+  document.getElementById('grid-holders').textContent =
+    (state.holderCount || 0).toLocaleString();
+  document.getElementById('grid-draws').textContent =
+    state.totalDraws || 0;
+}
+
+function renderStats(state) {
+  document.getElementById('stat-draws').textContent = state.totalDraws || 0;
+  document.getElementById('stat-spent').textContent =
+    (state.totalSolSpent || 0).toFixed(2) + ' SOL';
+  document.getElementById('stat-holders').textContent =
+    (state.holderCount || 0).toLocaleString();
+}
+
+function renderCollection(state) {
+  if (state.floorNftName) {
+    document.getElementById('coll-name').textContent = state.floorNftName;
+  }
+  if (state.floorPriceSol) {
+    document.getElementById('coll-floor').textContent =
+      'Floor: ' + state.floorPriceSol.toFixed(4) + ' SOL';
+  }
+  if (state.floorNftImage) {
+    const badge = document.getElementById('coll-badge');
+    badge.innerHTML = '<img src="' + state.floorNftImage + '" alt="">';
+  }
+}
+
+function renderHistory(state) {
+  const draws = state.draws || [];
+  if (draws.length === 0) return;
+
+  const tbody = document.getElementById('draw-history');
+  tbody.innerHTML = draws.map(d => {
+    const time = new Date(d.timestamp).toLocaleString();
+    const winner = d.winner.slice(0,6) + '...' + d.winner.slice(-4);
+    const price = d.solPrice.toFixed(4) + ' SOL';
+    return '<tr>' +
+      '<td>' + time + '</td>' +
+      '<td class="winner-cell">' + winner + '</td>' +
+      '<td class="card-cell">' + d.nftName + '</td>' +
+      '<td class="price-cell">' + price + '</td>' +
+      '</tr>';
+  }).join('');
+}
+
+fetchState();
+setInterval(fetchState, 30000);
+</script>
+</body>
+</html>
